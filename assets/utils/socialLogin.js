@@ -1,25 +1,17 @@
+import {View, Text, TouchableOpacity} from 'react-native';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+
+import {LoginManager} from 'react-native-fbsdk';
+
 // * Google
 export const googleSignIn = async () => {
   try {
     await GoogleSignin.hasPlayServices();
     const userInfo = await GoogleSignin.signIn();
     return userInfo;
-    console.log({userInfo});
-    setGdata(
-      userInfo.user.name +
-        '\n' +
-        userInfo.user.givenName +
-        '\n' +
-        userInfo.user.familyName +
-        '\n' +
-        userInfo.user.email +
-        '\n' +
-        userInfo.user.id,
-    );
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
@@ -55,60 +47,18 @@ export const googleSignOut = async () => {
 
 //*  Facebook
 
-//*  Facebook
-const fbSigninWithData = resCallback => {
-  return LoginManager.logInWithPermissions(['email', 'public_profile']).then(
-    result => {
-      console.log('FB Login Result:', result);
-      if (
-        result.declinedPermissions &&
-        result.declinedPermissions.includes('email')
-      ) {
-        resCallback({message: 'Email required'});
-      }
-      if (result.isCancelled) {
-        console.log('Request Cancelled');
-      } else {
-        const infoRequest = new GraphRequest(
-          '/me?fields=email,name,picture',
-          null,
-          resCallback,
-        );
-        new GraphRequestManager().addRequest(infoRequest).start();
-      }
-    },
-    function (error) {
-      console.log('Login fail with error: ' + error);
-    },
-  );
-};
-
-const fbLogInCall = async () => {
-  try {
-    await fbSigninWithData(_responseInfoCallback);
-  } catch (error) {
-    console.log('Error in fbLogInCall: ', error);
-  }
-};
-
-const _responseInfoCallback = async (error, result) => {
-  if (error) {
-    console.log('Error in _responseInfoCallback: ', error);
-  } else {
-    console.log('Successfully logged in Result: ', result);
-    setfdata(result.email + '\n ' + result.id + '\n ' + result.name + '\n ');
-  }
-};
-
-const fbSignout = async () => {
+export const fbSignout = async () => {
   LoginManager.logOut();
-  setfdata('Signed Out');
 };
 
 // FB Button Component
-export const FBButton = () => {
+export const FBButton = ({onPress}) => {
   return (
-    <TouchableOpacity onPress={fbLogInCall}>
+    <TouchableOpacity
+      // onPress={fbLogInCall}
+      onPress={() => {
+        onPress();
+      }}>
       <View
         style={{
           height: 40,
@@ -130,8 +80,10 @@ export const FBButton = () => {
   );
 };
 
+// ! RESPONSES
+
+// !Google SignIn Response
 /*
-Google SignIn Response
 {
   userInfo: {
     idToken:
@@ -154,3 +106,18 @@ Google SignIn Response
   },
 };
 */
+
+// !Facebook SignIn Response
+// {
+//   email: 'valere_cnmougb_valere@tfbnw.net',
+//   id: '105011389028620',
+//   name: 'Valere Valere',
+//   picture: {
+//     data: {
+//       height: 50,
+//       is_silhouette: true,
+//       url: 'https://scontent.fpnq11-1.fna.fbcdn.net/v/t1.30497-1/84628273_176159830277856_972693363922829312_n.jpg?stp=c15.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=1&ccb=1-7&_nc_sid=12b3be&_nc_ohc=q9UFKQUCFwYAX82E43s&_nc_ht=scontent.fpnq11-1.fna&edm=AP4hL3IEAAAA&oh=00_AT_oZQ6ao99yFWxaJMjYOc4pv0LlMSsgCGUys_ooV95PpQ&oe=6346F699',
+//       width: 50,
+//     },
+//   },
+// };

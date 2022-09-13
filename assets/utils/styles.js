@@ -138,6 +138,15 @@ export const Styles = StyleSheet.create({
   //   ----------------------------------------------------------------
 
   // ! Settings screen options
+
+  settingScreenProfilePicture: {
+    height: Sizes.settingsScreenDPHeight,
+    width: Sizes.settingsScreenDPWidth,
+    borderRadius: Sizes.infinity,
+    borderWidth: Sizes.borderWidthMedium,
+    borderColor: Colors.primary,
+  },
+
   settingButtonContainer: {
     paddingHorizontal: Sizes.paddingExtraLarge,
     paddingVertical: Sizes.paddingMedium,

@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {View, StyleSheet, SafeAreaView, Image} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 // Local Imports
 import {LogoComponent} from '../../components/logoComponent';
 import * as Images from '../../../assets/images';
 import * as Sizes from '../../../assets/utils/sizes';
+import {Styles} from '../../../assets/utils/styles';
 import {SizedBox} from '../../components/sizedBox';
 import {OptionButton} from '../../components/optionButton';
 
@@ -14,15 +15,17 @@ import {
   clearPersistentData,
   getPersistentData,
 } from '../../../assets/utils/persistentStorage';
-import {googleSignOut} from '../../../assets/utils/socialLogin';
+import {googleSignOut, fbSignout} from '../../../assets/utils/socialLogin';
 
 export const ProfileScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const authData = useSelector(state => state?.loggedInAs);
 
   const _signout = async () => {
     dispatch({type: LOGGEDINAS, LOGGEDINAS: null});
     dispatch({type: LOGGEDIN, LOGGEDINAS: false});
     googleSignOut();
+    fbSignout();
 
     await clearPersistentData('auth');
     navigation.reset({
@@ -33,25 +36,23 @@ export const ProfileScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <SizedBox height={30} />
       <View style={{alignItems: 'center'}}>
-        <LogoComponent
-          source={Images.logo}
-          height={Sizes.logoBigHeight}
-          width={Sizes.logoBigWidth}
-          resizeMode={'contain'}
+        <Image
+          style={Styles.settingScreenProfilePicture}
+          source={
+            authData?.dp
+              ? {uri: authData?.dp}
+              : require('../../../assets/images/dp.jpeg')
+          }
         />
       </View>
       <SizedBox height={30} />
       <OptionButton
-        title={'About'}
+        title={'Edit Profile'}
         icon={'user'}
-        onPress={async () => {
-          let data = await getPersistentData('auth');
-          if (data) {
-            console.log('Stored  Date', data.loggedIn, data.data);
-          } else {
-            console.log('No data in async storage');
-          }
+        onPress={() => {
+          navigation.navigate('EditProfileScreen');
         }}
       />
       <OptionButton title={'Settings'} icon={'mail'} onPress={() => {}} />

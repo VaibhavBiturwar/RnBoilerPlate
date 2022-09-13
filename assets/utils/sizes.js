@@ -73,3 +73,7 @@ export const listItemDPWidth = 70;
 export const paddingBottomNavigationBarTop = 18.0;
 export const bottomNavigationBarHeight = 85;
 export const bottomNavigationBarIcon = 32;
+
+// Settings screen profile picture
+export const settingsScreenDPHeight = 150;
+export const settingsScreenDPWidth = settingsScreenDPHeight;

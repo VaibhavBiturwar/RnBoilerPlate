@@ -8,7 +8,7 @@ import * as Sizes from '../../assets/utils/sizes';
 import {Styles} from '../../assets/utils/styles';
 import CustomIcon from '../components/customIcons/CustomIcon';
 import {HomeScreen} from '../screens/dashboard/homeScreen';
-import {ProfileScreen} from '../screens/dashboard/profileScreen';
+import {ProfileNavigator} from './profileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +56,17 @@ export const DashboardNavigator = () => {
         tabBarStyle: Styles.tabBarStyle,
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Me" component={ProfileScreen} />
+      <Tab.Screen name="Me" component={ProfileNav} />
     </Tab.Navigator>
+  );
+};
+
+const ProfileNav = () => {
+  return (
+    <>
+      {/* <NavigationContainer independent={true}> */}
+      <ProfileNavigator />
+      {/* </NavigationContainer> */}
+    </>
   );
 };

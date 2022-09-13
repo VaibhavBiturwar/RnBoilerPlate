@@ -1,12 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Button,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, SafeAreaView, Button, Text} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {
   GoogleSignin,
@@ -35,7 +28,7 @@ import {authenticateUser} from '../../redux/action';
 import {Loader} from '../../components/loader';
 
 import {savePersistentData} from '../../../assets/utils/persistentStorage';
-import {googleSignIn} from '../../../assets/utils/socialLogin';
+import {googleSignIn, FBButton} from '../../../assets/utils/socialLogin';
 import {LOGGEDINAS, LOGGEDIN} from '../../redux/reduxContstants';
 
 export const LoginScreen = ({navigation}) => {
@@ -44,8 +37,6 @@ export const LoginScreen = ({navigation}) => {
   const [pass, setPass] = useState('');
   const [passerror, setPassError] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const [fdata, setfdata] = useState('Not Logged in');
 
   const dispatch = useDispatch();
 
@@ -79,14 +70,40 @@ export const LoginScreen = ({navigation}) => {
   const _loginWithGoogle = async () => {
     const x = await googleSignIn();
     console.log(x);
+    if (x?.user) {
+      const values = {
+        loggedIn: true,
+        data: {
+          fname: x.user.familyName,
+          lname: x.user.givenName,
+          age: '20',
+          gender: 'Male',
+          mob: '9678564402',
+          dp: x.user.photo,
+        },
+      };
+      dispatch({type: LOGGEDINAS, LOGGEDINAS: values.data});
+      dispatch({type: LOGGEDIN, LOGGEDINAS: true});
+      await savePersistentData('auth', values);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Dashboard'}],
+      });
+    }
+  };
+
+  const fbLoginSuccess = async result => {
+    console.log(result.picture.data.url);
+    const name = result.name.split(' ');
     const values = {
       loggedIn: true,
       data: {
-        fname: x.user.familyName,
-        lname: x.user.givenName,
+        fname: name[0],
+        lname: name[1],
         age: '20',
         gender: 'Male',
         mob: '9678564402',
+        dp: result.picture.data.url,
       },
     };
     dispatch({type: LOGGEDINAS, LOGGEDINAS: values.data});
@@ -98,26 +115,9 @@ export const LoginScreen = ({navigation}) => {
     });
   };
 
-  const checkEmptyFields = () => {
-    if (email == null || email.length == 0) {
-      setEmailError(true);
-      AlertComponent('Please enter username/email');
-      return false;
-    }
-    if (pass == null || pass.length == 0) {
-      setPassError(true);
-      AlertComponent('Please enter your password');
-      return false;
-    }
-    return true;
-  };
-
-  // Facebook
-  //*  Facebook
   const fbSigninWithData = resCallback => {
     return LoginManager.logInWithPermissions(['email', 'public_profile']).then(
       result => {
-        console.log('FB Login Result:', result);
         if (
           result.declinedPermissions &&
           result.declinedPermissions.includes('email')
@@ -153,38 +153,22 @@ export const LoginScreen = ({navigation}) => {
     if (error) {
       console.log('Error in _responseInfoCallback: ', error);
     } else {
-      console.log('Successfully logged in Result: ', result);
-      setfdata(result.email + '\n ' + result.id + '\n ' + result.name + '\n ');
+      fbLoginSuccess(result);
     }
   };
 
-  const fbSignout = async () => {
-    LoginManager.logOut();
-    setfdata('Signed Out');
-  };
-
-  const FBButton = () => {
-    return (
-      <TouchableOpacity onPress={fbLogInCall}>
-        <View
-          style={{
-            height: 40,
-            width: 40,
-            backgroundColor: 'blue',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 24,
-              fontWeight: 'bold',
-            }}>
-            f
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+  const checkEmptyFields = () => {
+    if (email == null || email.length == 0) {
+      setEmailError(true);
+      AlertComponent('Please enter username/email');
+      return false;
+    }
+    if (pass == null || pass.length == 0) {
+      setPassError(true);
+      AlertComponent('Please enter your password');
+      return false;
+    }
+    return true;
   };
 
   useEffect(() => {
@@ -255,15 +239,9 @@ export const LoginScreen = ({navigation}) => {
                   color={GoogleSigninButton.Color.Light}
                   onPress={_loginWithGoogle}
                 />
-                <FBButton />
+                <FBButton onPress={fbLogInCall} />
               </View>
             </View>
-          </View>
-          {/* Facebook */}
-          <View>
-            <Text>{fdata}</Text>
-            <Button title={'Facebook Signin with data'} onPress={fbLogInCall} />
-            <Button title={'Facebook Signout'} onPress={fbSignout} />
           </View>
         </SafeAreaView>
         {loading && <Loader />}
