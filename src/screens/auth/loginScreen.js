@@ -1,10 +1,24 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, SafeAreaView, Button} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Button,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
+
+import {
+  LoginManager,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk';
+
 // Local Imports
 import {LogoComponent} from '../../components/logoComponent';
 import * as Images from '../../../assets/images';
@@ -21,7 +35,7 @@ import {authenticateUser} from '../../redux/action';
 import {Loader} from '../../components/loader';
 
 import {savePersistentData} from '../../../assets/utils/persistentStorage';
-import {googleSignIn, googleSignOut} from '../../../assets/utils/socialLogin';
+import {googleSignIn} from '../../../assets/utils/socialLogin';
 import {LOGGEDINAS, LOGGEDIN} from '../../redux/reduxContstants';
 
 export const LoginScreen = ({navigation}) => {
@@ -30,6 +44,8 @@ export const LoginScreen = ({navigation}) => {
   const [pass, setPass] = useState('');
   const [passerror, setPassError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [fdata, setfdata] = useState('Not Logged in');
 
   const dispatch = useDispatch();
 
@@ -96,6 +112,81 @@ export const LoginScreen = ({navigation}) => {
     return true;
   };
 
+  // Facebook
+  //*  Facebook
+  const fbSigninWithData = resCallback => {
+    return LoginManager.logInWithPermissions(['email', 'public_profile']).then(
+      result => {
+        console.log('FB Login Result:', result);
+        if (
+          result.declinedPermissions &&
+          result.declinedPermissions.includes('email')
+        ) {
+          resCallback({message: 'Email required'});
+        }
+        if (result.isCancelled) {
+          console.log('Request Cancelled');
+        } else {
+          const infoRequest = new GraphRequest(
+            '/me?fields=email,name,picture',
+            null,
+            resCallback,
+          );
+          new GraphRequestManager().addRequest(infoRequest).start();
+        }
+      },
+      function (error) {
+        console.log('Login fail with error: ' + error);
+      },
+    );
+  };
+
+  const fbLogInCall = async () => {
+    try {
+      await fbSigninWithData(_responseInfoCallback);
+    } catch (error) {
+      console.log('Error in fbLogInCall: ', error);
+    }
+  };
+
+  const _responseInfoCallback = async (error, result) => {
+    if (error) {
+      console.log('Error in _responseInfoCallback: ', error);
+    } else {
+      console.log('Successfully logged in Result: ', result);
+      setfdata(result.email + '\n ' + result.id + '\n ' + result.name + '\n ');
+    }
+  };
+
+  const fbSignout = async () => {
+    LoginManager.logOut();
+    setfdata('Signed Out');
+  };
+
+  const FBButton = () => {
+    return (
+      <TouchableOpacity onPress={fbLogInCall}>
+        <View
+          style={{
+            height: 40,
+            width: 40,
+            backgroundColor: 'blue',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 24,
+              fontWeight: 'bold',
+            }}>
+            f
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   useEffect(() => {
     // function to load here
     GoogleSignin.configure();
@@ -157,19 +248,22 @@ export const LoginScreen = ({navigation}) => {
                   navigation.navigate('SignupScreen');
                 }}
               />
-              <GoogleSigninButton
-                size={GoogleSigninButton.Size.Icon}
-                color={GoogleSigninButton.Color.Light}
-                onPress={_loginWithGoogle}
-              />
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <GoogleSigninButton
+                  size={GoogleSigninButton.Size.Icon}
+                  color={GoogleSigninButton.Color.Light}
+                  onPress={_loginWithGoogle}
+                />
+                <FBButton />
+              </View>
             </View>
           </View>
-
-          {/* Google */}
+          {/* Facebook */}
           <View>
-            {/* <Text>{gdata}</Text> */}
-
-            <Button title={'Google Signout'} onPress={googleSignOut} />
+            <Text>{fdata}</Text>
+            <Button title={'Facebook Signin with data'} onPress={fbLogInCall} />
+            <Button title={'Facebook Signout'} onPress={fbSignout} />
           </View>
         </SafeAreaView>
         {loading && <Loader />}

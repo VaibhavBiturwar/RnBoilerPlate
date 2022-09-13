@@ -51,6 +51,85 @@ export const googleSignOut = async () => {
   }
 };
 
+//! ------------------------------------------------------------------------------------------------------
+
+//*  Facebook
+
+//*  Facebook
+const fbSigninWithData = resCallback => {
+  return LoginManager.logInWithPermissions(['email', 'public_profile']).then(
+    result => {
+      console.log('FB Login Result:', result);
+      if (
+        result.declinedPermissions &&
+        result.declinedPermissions.includes('email')
+      ) {
+        resCallback({message: 'Email required'});
+      }
+      if (result.isCancelled) {
+        console.log('Request Cancelled');
+      } else {
+        const infoRequest = new GraphRequest(
+          '/me?fields=email,name,picture',
+          null,
+          resCallback,
+        );
+        new GraphRequestManager().addRequest(infoRequest).start();
+      }
+    },
+    function (error) {
+      console.log('Login fail with error: ' + error);
+    },
+  );
+};
+
+const fbLogInCall = async () => {
+  try {
+    await fbSigninWithData(_responseInfoCallback);
+  } catch (error) {
+    console.log('Error in fbLogInCall: ', error);
+  }
+};
+
+const _responseInfoCallback = async (error, result) => {
+  if (error) {
+    console.log('Error in _responseInfoCallback: ', error);
+  } else {
+    console.log('Successfully logged in Result: ', result);
+    setfdata(result.email + '\n ' + result.id + '\n ' + result.name + '\n ');
+  }
+};
+
+const fbSignout = async () => {
+  LoginManager.logOut();
+  setfdata('Signed Out');
+};
+
+// FB Button Component
+export const FBButton = () => {
+  return (
+    <TouchableOpacity onPress={fbLogInCall}>
+      <View
+        style={{
+          height: 40,
+          width: 40,
+          backgroundColor: 'blue',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 24,
+            fontWeight: 'bold',
+          }}>
+          f
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 /*
 Google SignIn Response
 {
