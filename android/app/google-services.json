@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "630732743771",
+    "project_id": "rnboilerplate-fc38a",
+    "storage_bucket": "rnboilerplate-fc38a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630732743771:android:82593bd014d832ea09cb7e",
+        "android_client_info": {
+          "package_name": "com.rnboilerplate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "630732743771-vsbvh3s57bddp1jequlk6hpeusup9r5v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZnoqE9OCfi_qSuj9yDK_oV5cMeyabh28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630732743771-vsbvh3s57bddp1jequlk6hpeusup9r5v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "630732743771-mbg3n4es8kouck1osp2bbc1e0fg08hig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.RnBoilerPlate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
