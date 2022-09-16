@@ -1,31 +1,31 @@
-import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {useDispatch} from 'react-redux';
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import { useDispatch } from "react-redux";
 
-import {LOGGEDIN, LOGGEDINAS} from '../../redux/reduxContstants';
-import {Styles} from '../../../assets/utils/styles';
-import {SizedBox} from '../../components/sizedBox';
-import {getPersistentData} from '../../../assets/utils/persistentStorage';
+// Local Imports
+import { SizedBox, CustomText } from "../../components";
+import { LOGGEDIN, LOGGEDINAS } from "../../redux/reduxContstants";
+import { Styles, getPersistentData } from "../../../assets/utils";
 
-export const SplashScreen = ({navigation}) => {
+export const SplashScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const checkUserLoggedIn = async () => {
-    const data = await getPersistentData('auth');
+    const data = await getPersistentData("auth");
     if (data?.loggedIn) {
-      dispatch({type: LOGGEDINAS, LOGGEDINAS: data.data});
-      dispatch({type: LOGGEDIN, LOGGEDINAS: true});
+      dispatch({ type: LOGGEDINAS, LOGGEDINAS: data.data });
+      dispatch({ type: LOGGEDIN, LOGGEDINAS: true });
       setTimeout(() => {
         navigation.reset({
           index: 0,
-          routes: [{name: 'Dashboard'}],
+          routes: [{ name: "Dashboard" }],
         });
       }, 2000);
     } else {
       setTimeout(() => {
         navigation.reset({
           index: 0,
-          routes: [{name: 'LoginScreen'}],
+          routes: [{ name: "LoginScreen" }],
         });
       }, 2000);
     }
@@ -39,13 +39,11 @@ export const SplashScreen = ({navigation}) => {
 
   return (
     <View style={Styles.splashScreenContainer}>
-      <Text style={Styles.splashScreenText1}>React Native</Text>
+      <CustomText style={Styles.splashScreenText1}>React Native</CustomText>
       <SizedBox height={20} />
-      <Text style={Styles.splashScreenText2}>Boilerplate Template</Text>
+      <CustomText style={Styles.splashScreenText2}>
+        Boilerplate Template
+      </CustomText>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-});

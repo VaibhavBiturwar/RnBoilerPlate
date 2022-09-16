@@ -1,12 +1,11 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import React from "react";
+import { View, Text, TextInput } from "react-native";
 
 // Local Imports
-import * as Colors from '../../..//assets/utils/colors';
-import * as Sizes from '../../..//assets/utils/sizes';
-import {Styles} from '../../../assets/utils/styles';
-import {SizedBox} from '../sizedBox';
-import CustomIcons from '../customIcons/CustomIcon';
+import * as Colors from "../../..//assets/utils/colors";
+import * as Sizes from "../../..//assets/utils/sizes";
+import { Styles } from "../../../assets/utils";
+import { SizedBox, CustomIcon, CustomText } from "../index";
 
 export const IconInputBox = ({
   boxContainer = Styles.inputBoxContainer,
@@ -19,23 +18,25 @@ export const IconInputBox = ({
   onChangeText,
   showError = false,
   onFocus,
+  value,
 }) => {
   return (
-    <View style={{flexDirection: 'column'}}>
+    <View style={{ flexDirection: "column" }}>
       <>
         {label && (
           <>
-            <Text style={labelStyle}>{label}</Text>
+            <CustomText style={labelStyle}>{label}</CustomText>
             <SizedBox height={Sizes.marginVerySmall} />
           </>
         )}
         <View style={showError ? Styles.inputBoxContainerError : boxContainer}>
-          <CustomIcons
+          <CustomIcon
             name={iconName}
             size={20}
-            style={{color: Colors.lightGray}}
+            style={{ color: Colors.lightGray }}
           />
           <TextInput
+            value={value}
             style={textInput}
             placeholder={placeholder}
             placeholderTextColor={placeholderTextColor}

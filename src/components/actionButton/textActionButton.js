@@ -1,19 +1,17 @@
-import React from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from "react";
 
 // Local Imports
-import * as Colors from '../../../assets/utils/colors';
-import * as Sizes from '../../../assets/utils/sizes';
-import {Styles} from '../../../assets/utils/styles';
+import { Styles } from "../../../assets/utils";
+import { CustomText } from "../index";
 
 export const TextActionButton = ({
-  label = 'Press',
+  label = "Press",
   onPress,
   buttonTextStyle = Styles.textActionButtonStyle,
 }) => {
   return (
-    <Text style={buttonTextStyle} onPress={onPress}>
+    <CustomText style={buttonTextStyle} onPress={onPress}>
       {label}
-    </Text>
+    </CustomText>
   );
 };

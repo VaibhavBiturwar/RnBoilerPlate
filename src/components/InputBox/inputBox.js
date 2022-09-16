@@ -1,11 +1,11 @@
-import React from 'react';
-import {View, Text, TextInput} from 'react-native';
+import React from "react";
+import { View, TextInput } from "react-native";
 
 // Local Imports
-import * as Colors from '../../..//assets/utils/colors';
-import * as Sizes from '../../..//assets/utils/sizes';
-import {Styles} from '../../../assets/utils/styles';
-import {SizedBox} from '../sizedBox';
+import * as Colors from "../../..//assets/utils/colors";
+import * as Sizes from "../../..//assets/utils/sizes";
+import { Styles } from "../../../assets/utils";
+import { SizedBox, CustomText } from "../index";
 
 export const InputBox = ({
   boxContainer = Styles.inputBoxContainer,
@@ -23,7 +23,7 @@ export const InputBox = ({
     <>
       {label && (
         <>
-          <Text style={labelStyle}>{label}</Text>
+          <CustomText style={labelStyle}>{label}</CustomText>
           <SizedBox height={Sizes.marginVerySmall} />
         </>
       )}
@@ -31,9 +31,10 @@ export const InputBox = ({
       <View
         style={
           showError
-            ? {...Styles.inputBoxContainerError, flex: flex}
-            : {...boxContainer, flex: flex}
-        }>
+            ? { ...Styles.inputBoxContainerError, flex: flex }
+            : { ...boxContainer, flex: flex }
+        }
+      >
         <TextInput
           style={textInput}
           placeholder={placeholder}

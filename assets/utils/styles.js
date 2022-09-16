@@ -1,15 +1,20 @@
-import {StyleSheet} from 'react-native';
-import * as Colors from './colors';
-import * as Sizes from './sizes';
-import {Platform} from 'react-native';
-export const fontFamily = 'Poppins-Regular';
+import { StyleSheet } from "react-native";
+import * as Colors from "./colors";
+import * as Sizes from "./sizes";
+import { Platform } from "react-native";
+export const fontFamily = "Poppins-Regular";
 
 export const Styles = StyleSheet.create({
+  customText: {
+    color: Colors.fontColor,
+    fontFamily: fontFamily,
+  },
+
   // ! Splash Screen
   splashScreenContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   splashScreenText1: {
     fontSize: Sizes.textExtraLarge,
@@ -24,20 +29,35 @@ export const Styles = StyleSheet.create({
     fontFamily: fontFamily,
   },
 
+  // !FB Icon
+  fbIconBG: {
+    height: 40,
+    width: 40,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: Sizes.borderRadiusSmall,
+  },
+  fbIconText: {
+    color: "white",
+    fontSize: Sizes.textExtraLarge,
+    fontWeight: Sizes.weightBold,
+  },
+
   // ! Icon Input Box
   inputBoxContainer: {
     backgroundColor: Colors.darkGray,
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: Sizes.borderRadiusSmall,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: Sizes.paddingSmall,
     borderWidth: Sizes.borderWidthSmall,
   },
   inputBoxContainerError: {
     backgroundColor: Colors.darkGray,
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: Sizes.borderRadiusSmall,
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: Sizes.paddingSmall,
     borderWidth: Sizes.borderWidthSmall,
     borderColor: Colors.errorRed,
@@ -48,7 +68,7 @@ export const Styles = StyleSheet.create({
     fontFamily: fontFamily,
     fontWeight: Sizes.weightNormal,
     fontSize: Sizes.textNormal,
-    marginVertical: Platform.OS == 'ios' ? Sizes.marginMedium : 0,
+    marginVertical: Platform.OS == "ios" ? Sizes.marginMedium : 0,
     marginHorizontal: Sizes.marginSmall,
   },
   inputLabelStyle: {
@@ -58,13 +78,13 @@ export const Styles = StyleSheet.create({
     color: Colors.black,
   },
 
-  // Action Button
+  //! Action Button
   actionButtonStyle: {
     backgroundColor: Colors.primary,
     paddingVertical: Sizes.paddingMedium,
     borderRadius: Sizes.infinity,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   actionButtonTextStyle: {
     color: Colors.white,
@@ -85,13 +105,13 @@ export const Styles = StyleSheet.create({
     fontSize: Sizes.textExtraLarge,
     fontWeight: Sizes.weightBold,
     fontFamily: fontFamily,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 
   // ! List Items
   listItemContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: Sizes.marginExtraLarge,
     marginHorizontal: Sizes.marginMedium,
     padding: Sizes.paddingSmall,
@@ -117,7 +137,7 @@ export const Styles = StyleSheet.create({
 
   // ! Bottom Navigation Bar
   tabBtncontainer: {
-    alignItems: 'center',
+    alignItems: "center",
     borderBottomColor: Colors.bottomNavigationBarIconHighlightColor,
     borderBottomWidth: Sizes.borderWidthSmall,
   },
@@ -138,7 +158,6 @@ export const Styles = StyleSheet.create({
   //   ----------------------------------------------------------------
 
   // ! Settings screen options
-
   settingScreenProfilePicture: {
     height: Sizes.settingsScreenDPHeight,
     width: Sizes.settingsScreenDPWidth,
@@ -153,12 +172,46 @@ export const Styles = StyleSheet.create({
     marginVertical: Sizes.paddingSmall,
     marginLeft: Sizes.paddingBigLarge,
   },
-  settingButtonRow: {flexDirection: 'row', alignItems: 'center'},
+  settingButtonRow: { flexDirection: "row", alignItems: "center" },
   settingButtonText: {
     fontWeight: Sizes.weightMedium,
     fontSize: Sizes.textLarge,
     color: Colors.primary,
     marginLeft: Sizes.marginMedium,
     fontFamily: fontFamily,
+  },
+
+  // !Top Navigation bar
+  topNavBarContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: Colors.transparent,
+    borderBottomColor: Colors.primary,
+    paddingHorizontal: Sizes.paddingSmall,
+    height: Sizes.topNavigationBarHeight,
+  },
+  topNavBarText: {
+    fontFamily: fontFamily,
+    fontWeight: Sizes.weightBold,
+    fontSize: Sizes.textMedium,
+    color: Colors.primary,
+  },
+  topNavBarBackColor: {
+    color: Colors.primary,
+  },
+
+  //! Loader
+  loaderBackdrop: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.loaderBackdropColor,
+  },
+  loaderText: {
+    fontFamily: fontFamily,
+    fontWeight: Sizes.weightBold,
+    fontSize: Sizes.textMedium,
   },
 });

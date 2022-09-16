@@ -1,40 +1,46 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, SafeAreaView, Button, Text} from 'react-native';
-import {useDispatch} from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
+import { useDispatch } from "react-redux";
 import {
   GoogleSignin,
   GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+} from "@react-native-google-signin/google-signin";
 
 import {
   LoginManager,
   GraphRequest,
   GraphRequestManager,
-} from 'react-native-fbsdk';
+} from "react-native-fbsdk";
 
 // Local Imports
-import {LogoComponent} from '../../components/logoComponent';
-import * as Images from '../../../assets/images';
-import * as Sizes from '../../../assets/utils/sizes';
-import {IconInputBox} from '../../components/InputBox/iconInputBox';
-import {PassInputBox} from '../../components/InputBox/passInputBox';
-import {SizedBox} from '../../components/sizedBox';
-import {ActionButton} from '../../components/actionButton/actionButton';
-import {TextActionButton} from '../../components/actionButton/textActionButton';
-import {KeyboardDismiss} from '../../components/keyboardDismiss';
-import {HeadingText} from '../../components/headingText';
-import {AlertComponent} from '../../components/alertComponent';
-import {authenticateUser} from '../../redux/action';
-import {Loader} from '../../components/loader';
+import {
+  LogoComponent,
+  IconInputBox,
+  PassInputBox,
+  SizedBox,
+  ActionButton,
+  TextActionButton,
+  KeyboardDismiss,
+  HeadingText,
+  AlertComponent,
+  Loader,
+} from "../../components";
 
-import {savePersistentData} from '../../../assets/utils/persistentStorage';
-import {googleSignIn, FBButton} from '../../../assets/utils/socialLogin';
-import {LOGGEDINAS, LOGGEDIN} from '../../redux/reduxContstants';
+import * as Images from "../../../assets/images";
+import * as Sizes from "../../../assets/utils/sizes";
+import { authenticateUser } from "../../redux/action";
 
-export const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
+import {
+  savePersistentData,
+  googleSignIn,
+  FBButton,
+} from "../../../assets/utils";
+import { LOGGEDINAS, LOGGEDIN } from "../../redux/reduxContstants";
+
+export const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
   const [emailerror, setEmailError] = useState(false);
-  const [pass, setPass] = useState('');
+  const [pass, setPass] = useState("");
   const [passerror, setPassError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -52,92 +58,95 @@ export const LoginScreen = ({navigation}) => {
                 loggedIn: true,
                 data: data,
               };
-              await savePersistentData('auth', val);
+              await savePersistentData("auth", val);
               setLoading(false);
               navigation.reset({
                 index: 0,
-                routes: [{name: 'Dashboard'}],
+                routes: [{ name: "Dashboard" }],
               });
             }
           }, 2000);
-        }),
+        })
       );
     } else {
-      console.log('Empty Fields');
+      console.log("Empty Fields");
     }
   };
 
   const _loginWithGoogle = async () => {
     const x = await googleSignIn();
-    console.log(x);
     if (x?.user) {
       const values = {
         loggedIn: true,
         data: {
-          fname: x.user.familyName,
-          lname: x.user.givenName,
-          age: '20',
-          gender: 'Male',
-          mob: '9678564402',
+          fname: x.user.givenName,
+          lname: x.user.familyName,
+          age: "20",
+          gender: "Male",
+          mob: "9678564402",
           dp: x.user.photo,
         },
       };
-      dispatch({type: LOGGEDINAS, LOGGEDINAS: values.data});
-      dispatch({type: LOGGEDIN, LOGGEDINAS: true});
-      await savePersistentData('auth', values);
+      dispatch({ type: LOGGEDINAS, LOGGEDINAS: values.data });
+      dispatch({ type: LOGGEDIN, LOGGEDINAS: true });
+      await savePersistentData("auth", values);
       navigation.reset({
         index: 0,
-        routes: [{name: 'Dashboard'}],
+        routes: [{ name: "Dashboard" }],
       });
+    } else {
+      AlertComponent("Error Occurrred", x.message);
     }
   };
 
-  const fbLoginSuccess = async result => {
+  const fbLoginSuccess = async (result) => {
     console.log(result.picture.data.url);
-    const name = result.name.split(' ');
+    const name = result.name.split(" ");
     const values = {
       loggedIn: true,
       data: {
         fname: name[0],
         lname: name[1],
-        age: '20',
-        gender: 'Male',
-        mob: '9678564402',
+        age: "20",
+        gender: "Male",
+        mob: "9678564402",
         dp: result.picture.data.url,
       },
     };
-    dispatch({type: LOGGEDINAS, LOGGEDINAS: values.data});
-    dispatch({type: LOGGEDIN, LOGGEDINAS: true});
-    await savePersistentData('auth', values);
+    dispatch({ type: LOGGEDINAS, LOGGEDINAS: values.data });
+    dispatch({ type: LOGGEDIN, LOGGEDINAS: true });
+    await savePersistentData("auth", values);
     navigation.reset({
       index: 0,
-      routes: [{name: 'Dashboard'}],
+      routes: [{ name: "Dashboard" }],
     });
   };
 
-  const fbSigninWithData = resCallback => {
-    return LoginManager.logInWithPermissions(['email', 'public_profile']).then(
-      result => {
+  const fbSigninWithData = (resCallback) => {
+    return LoginManager.logInWithPermissions(["email", "public_profile"]).then(
+      (result) => {
         if (
           result.declinedPermissions &&
-          result.declinedPermissions.includes('email')
+          result.declinedPermissions.includes("email")
         ) {
-          resCallback({message: 'Email required'});
+          resCallback({ message: "Email required" });
+          AlertComponent("Email is required");
         }
         if (result.isCancelled) {
-          console.log('Request Cancelled');
+          console.log("Request Cancelled");
+          AlertComponent("Request Cancelled");
         } else {
           const infoRequest = new GraphRequest(
-            '/me?fields=email,name,picture',
+            "/me?fields=email,name,picture",
             null,
-            resCallback,
+            resCallback
           );
           new GraphRequestManager().addRequest(infoRequest).start();
         }
       },
       function (error) {
-        console.log('Login fail with error: ' + error);
-      },
+        console.log("Login fail with error: " + error);
+      }
     );
   };
 
@@ -145,13 +154,14 @@ export const LoginScreen = ({navigation}) => {
     try {
       await fbSigninWithData(_responseInfoCallback);
     } catch (error) {
-      console.log('Error in fbLogInCall: ', error);
+      console.log("Error in fbLogInCall: ", error);
+      AlertComponent("Facebook Login Error: ", error);
     }
   };
 
   const _responseInfoCallback = async (error, result) => {
     if (error) {
-      console.log('Error in _responseInfoCallback: ', error);
+      console.log("Error in _responseInfoCallback: ", error);
     } else {
       fbLoginSuccess(result);
     }
@@ -160,12 +170,12 @@ export const LoginScreen = ({navigation}) => {
   const checkEmptyFields = () => {
     if (email == null || email.length == 0) {
       setEmailError(true);
-      AlertComponent('Please enter username/email');
+      AlertComponent("Please enter username/email");
       return false;
     }
     if (pass == null || pass.length == 0) {
       setPassError(true);
-      AlertComponent('Please enter your password');
+      AlertComponent("Please enter your password");
       return false;
     }
     return true;
@@ -178,24 +188,24 @@ export const LoginScreen = ({navigation}) => {
 
   return (
     <KeyboardDismiss>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView style={styles.container}>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: "center" }}>
             <LogoComponent
               source={Images.logo}
               height={Sizes.logoBigHeight}
               width={Sizes.logoBigWidth}
-              resizeMode={'contain'}
+              resizeMode={"contain"}
             />
           </View>
-          <View style={{justifyContent: 'center', flex: 1}}>
-            <HeadingText label={'Login'} />
+          <View style={{ justifyContent: "center", flex: 1 }}>
+            <HeadingText label={"Login"} />
             <SizedBox height={30} />
             <IconInputBox
               showError={emailerror}
-              placeholder={'Enter your email address'}
+              placeholder={"Enter your email address"}
               iconName="mail"
-              onChangeText={val => {
+              onChangeText={(val) => {
                 setEmail(val);
               }}
               onFocus={() => {
@@ -205,8 +215,8 @@ export const LoginScreen = ({navigation}) => {
             <SizedBox height={20} />
             <PassInputBox
               showError={passerror}
-              placeholder={'Enter your password'}
-              onChangeText={val => {
+              placeholder={"Enter your password"}
+              onChangeText={(val) => {
                 setPass(val);
               }}
               onFocus={() => {
@@ -214,26 +224,31 @@ export const LoginScreen = ({navigation}) => {
               }}
             />
             <SizedBox height={30} />
-            <View style={{flexDirection: 'row-reverse'}}>
+            <View style={{ flexDirection: "row-reverse" }}>
               <TextActionButton
-                label={'Forgot Password?'}
+                label={"Forgot Password?"}
                 onPress={() => {
-                  navigation.navigate('ForgotPassScreen');
+                  navigation.navigate("ForgotPassScreen");
                 }}
               />
             </View>
             <SizedBox height={10} />
-            <ActionButton label={'Login'} onPress={_login} />
+            <ActionButton label={"Login"} onPress={_login} />
             <SizedBox height={20} />
-            <View style={{alignSelf: 'center'}}>
+            <View style={{ alignSelf: "center" }}>
               <TextActionButton
                 label={"Don't have account? Signup"}
                 onPress={() => {
-                  navigation.navigate('SignupScreen');
+                  navigation.navigate("SignupScreen");
                 }}
               />
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingTop: 10,
+                }}
+              >
                 <GoogleSigninButton
                   size={GoogleSigninButton.Size.Icon}
                   color={GoogleSigninButton.Color.Light}
@@ -244,7 +259,7 @@ export const LoginScreen = ({navigation}) => {
             </View>
           </View>
         </SafeAreaView>
-        {loading && <Loader />}
+        {loading && <Loader label={"Siging you in..."} />}
       </View>
     </KeyboardDismiss>
   );

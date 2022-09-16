@@ -1,13 +1,11 @@
-import React from 'react';
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from "react";
+import { TouchableOpacity } from "react-native";
 
 // Local Imports
-import * as Colors from '../../../assets/utils/colors';
-import * as Sizes from '../../../assets/utils/sizes';
-import {Styles} from '../../../assets/utils/styles';
-
+import { Styles } from "../../../assets/utils";
+import { CustomText } from "../index";
 export const ActionButton = ({
-  label = 'Press',
+  label = "Press",
   onPress,
   onPressIn,
   onPressOut,
@@ -21,8 +19,9 @@ export const ActionButton = ({
       style={buttonStyle}
       onPress={onPress}
       onPressIn={onPressIn}
-      onPressOut={onPressOut}>
-      <Text style={buttonTextStyle}>{label}</Text>
+      onPressOut={onPressOut}
+    >
+      <CustomText style={buttonTextStyle}>{label}</CustomText>
     </TouchableOpacity>
   );
 };

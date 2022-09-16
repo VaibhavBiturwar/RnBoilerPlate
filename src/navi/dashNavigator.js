@@ -1,29 +1,29 @@
-import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React from "react";
+import { View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 // Local Imports
-import * as Colors from '../../assets/utils/colors';
-import * as Sizes from '../../assets/utils/sizes';
-import {Styles} from '../../assets/utils/styles';
-import CustomIcon from '../components/customIcons/CustomIcon';
-import {HomeScreen} from '../screens/dashboard/homeScreen';
-import {ProfileNavigator} from './profileNavigator';
+import * as Colors from "../../assets/utils/colors";
+import * as Sizes from "../../assets/utils/sizes";
+import { Styles } from "../../assets/utils";
+import { CustomIcon, CustomText } from "../components";
+import { HomeScreen } from "../screens/dashboard/homeScreen";
+import { ProfileNavigator } from "./profileNavigator";
 
 const Tab = createBottomTabNavigator();
 
 export const DashboardNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
+        tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === 'Me') {
-            iconName = 'me';
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Me") {
+            iconName = "me";
           }
 
           if (focused) {
@@ -32,29 +32,30 @@ export const DashboardNavigator = () => {
                 <CustomIcon
                   name={iconName}
                   size={Sizes.bottomNavigationBarIcon}
-                  style={{color: Colors.bottomNavigationBarIconColor}}
+                  style={{ color: Colors.bottomNavigationBarIconColor }}
                 />
-                <Text style={Styles.tabLabel}>{route.name}</Text>
+                <CustomText style={Styles.tabLabel}>{route.name}</CustomText>
               </View>
             );
           }
 
           return (
-            <View style={[Styles.tabBtncontainer, {borderBottomWidth: 0}]}>
+            <View style={[Styles.tabBtncontainer, { borderBottomWidth: 0 }]}>
               <CustomIcon
                 name={iconName}
                 size={Sizes.bottomNavigationBarIcon}
-                style={{color: Colors.bottomNavigationBarIconColor}}
+                style={{ color: Colors.bottomNavigationBarIconColor }}
               />
-              <Text style={[Styles.tabLabel, {marginBottom: 10}]}>
+              <CustomText style={[Styles.tabLabel, { marginBottom: 10 }]}>
                 {route.name}
-              </Text>
+              </CustomText>
             </View>
           );
         },
         tabBarShowLabel: false,
         tabBarStyle: Styles.tabBarStyle,
-      })}>
+      })}
+    >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Me" component={ProfileNav} />
     </Tab.Navigator>

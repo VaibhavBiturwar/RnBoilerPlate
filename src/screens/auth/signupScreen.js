@@ -1,44 +1,49 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
-} from 'react-native';
-import {useDispatch} from 'react-redux';
+} from "react-native";
+import { useDispatch } from "react-redux";
 // Local Imports
-import * as Images from '../../../assets/images';
-import * as Sizes from '../../../assets/utils/sizes';
-import * as Strings from '../../../assets/utils/strings';
-import * as HelperFunctions from '../../../assets/utils/helperFunctions';
+import * as Images from "../../../assets/images";
+import * as Sizes from "../../../assets/utils/sizes";
+import {
+  checkEmailFormat,
+  validatePass,
+  passInvlid,
+} from "../../../assets/utils";
 
-import {LogoComponent} from '../../components/logoComponent';
-import {InputBox} from '../../components/InputBox/inputBox';
-import {IconInputBox} from '../../components/InputBox/iconInputBox';
-import {PassInputBox} from '../../components/InputBox/passInputBox';
-import {SizedBox} from '../../components/sizedBox';
-import {ActionButton} from '../../components/actionButton/actionButton';
-import {TextActionButton} from '../../components/actionButton/textActionButton';
-import {KeyboardDismiss} from '../../components/keyboardDismiss';
-import {HeadingText} from '../../components/headingText';
-import {AlertComponent} from '../../components/alertComponent';
-import {Loader} from '../../components/loader';
+import {
+  LogoComponent,
+  InputBox,
+  IconInputBox,
+  PassInputBox,
+  SizedBox,
+  ActionButton,
+  TextActionButton,
+  KeyboardDismiss,
+  HeadingText,
+  AlertComponent,
+  Loader,
+} from "../../components";
 
-import {authenticateUser} from '../../redux/action';
+import { authenticateUser } from "../../redux/action";
 
 const sizedBoxHeight = Sizes.marginMedium;
-export const SignupScreen = ({navigation}) => {
-  const [fname, setFname] = useState('');
+export const SignupScreen = ({ navigation }) => {
+  const [fname, setFname] = useState("");
   const [fnameError, setFnameError] = useState(false);
-  const [lname, setLname] = useState('');
+  const [lname, setLname] = useState("");
   const [lnameError, setLnameError] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
-  const [uname, setUname] = useState('');
+  const [uname, setUname] = useState("");
   const [unameError, setUnameError] = useState(false);
-  const [pass, setPass] = useState('');
+  const [pass, setPass] = useState("");
   const [passError, setPassError] = useState(false);
-  const [cpass, setCpass] = useState('');
+  const [cpass, setCpass] = useState("");
   const [cpassError, setCpassError] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -50,69 +55,69 @@ export const SignupScreen = ({navigation}) => {
     if (!checkEmptyFields()) return;
     // ! checking for password confirm
     if (pass != cpass) {
-      AlertComponent('Password does not match', 'Please try again');
+      AlertComponent("Password does not match", "Please try again");
       setCpassError(true);
       return;
     }
     // ! Checking format of email field
-    if (!HelperFunctions.checkEmailFormat(email)) {
-      AlertComponent('Email not valid', 'Please enter a valid email address');
+    if (!checkEmailFormat(email)) {
+      AlertComponent("Email not valid", "Please enter a valid email address");
       setEmailError(true);
       return;
     }
     // ! Checking format of password field
-    if (!HelperFunctions.validatePass(pass)) {
-      AlertComponent('Password  Invalid', Strings.passInvlid);
-      setEmailError(true);
+    if (!validatePass(pass)) {
+      AlertComponent("Password  Invalid", passInvlid);
+      setPassError(true);
       return;
     }
 
     setLoading(true);
 
     dispatch(
-      authenticateUser(e => {
+      authenticateUser((e) => {
         if (e) {
           // Setting persistent storage
           setLoading(false);
           navigation.reset({
             index: 0,
-            routes: [{name: 'Dashboard'}],
+            routes: [{ name: "Dashboard" }],
           });
         }
-      }),
+      })
     );
   };
 
   const checkEmptyFields = () => {
     if (fname == null || fname.length == 0) {
       setFnameError(true);
-      AlertComponent('First Name cannot be empty');
+      AlertComponent("First Name cannot be empty");
       return false;
     }
 
     if (lname == null || lname.length == 0) {
       setLnameError(true);
-      AlertComponent('Last Name cannot be empty');
+      AlertComponent("Last Name cannot be empty");
       return false;
     }
     if (email == null || email.length == 0) {
       setEmailError(true);
-      AlertComponent('Email cannot be empty');
+      AlertComponent("Email cannot be empty");
       return false;
     }
     if (uname == null || uname.length == 0) {
       setUnameError(true);
-      AlertComponent('Username cannot be empty');
+      AlertComponent("Username cannot be empty");
       return false;
     }
     if (pass == null || pass.length == 0) {
       setPassError(true);
-      AlertComponent('Password cannot be empty');
+      AlertComponent("Password cannot be empty");
       return false;
     }
     if (cpass == null || cpass.length == 0) {
       setCpassError(true);
-      AlertComponent('Confirm Password cannot be empty');
+      AlertComponent("Confirm Password cannot be empty");
       return false;
     }
     return true;
@@ -120,27 +125,28 @@ export const SignupScreen = ({navigation}) => {
 
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <KeyboardDismiss>
         <SafeAreaView style={styles.container}>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: "center" }}>
             <LogoComponent
               source={Images.logo}
               height={Sizes.logoBigHeight}
               width={Sizes.logoBigWidth}
-              resizeMode={'contain'}
+              resizeMode={"contain"}
             />
           </View>
-          <View style={{justifyContent: 'center', flex: 1}}>
-            <HeadingText label={'Sign-Up'} />
+          <View style={{ justifyContent: "center", flex: 1 }}>
+            <HeadingText label={"Sign-Up"} />
             <SizedBox height={30} />
             {/* First & last name */}
             <View style={styles.rowItemsStyle}>
               <InputBox
                 showError={fnameError}
-                placeholder={'First Name'}
-                onChangeText={val => {
+                placeholder={"First Name"}
+                onChangeText={(val) => {
                   setFname(val);
                 }}
                 onFocus={() => {
@@ -150,8 +156,8 @@ export const SignupScreen = ({navigation}) => {
               <SizedBox width={sizedBoxHeight} />
               <InputBox
                 showError={lnameError}
-                placeholder={'Last Name'}
-                onChangeText={val => {
+                placeholder={"Last Name"}
+                onChangeText={(val) => {
                   setLname(val);
                 }}
                 onFocus={() => {
@@ -163,9 +169,9 @@ export const SignupScreen = ({navigation}) => {
             {/* Email */}
             <IconInputBox
               showError={emailError}
-              placeholder={'Email Address'}
+              placeholder={"Email Address"}
               iconName="mail"
-              onChangeText={val => {
+              onChangeText={(val) => {
                 setEmail(val);
               }}
               onFocus={() => {
@@ -177,9 +183,9 @@ export const SignupScreen = ({navigation}) => {
             {/*Username  */}
             <IconInputBox
               showError={unameError}
-              placeholder={'Username'}
+              placeholder={"Username"}
               iconName="user"
-              onChangeText={val => {
+              onChangeText={(val) => {
                 setUname(val);
               }}
               onFocus={() => {
@@ -191,8 +197,8 @@ export const SignupScreen = ({navigation}) => {
             {/* Password */}
             <PassInputBox
               showError={passError}
-              placeholder={'Password'}
-              onChangeText={val => {
+              placeholder={"Password"}
+              onChangeText={(val) => {
                 setPass(val);
               }}
               onFocus={() => {
@@ -203,8 +209,8 @@ export const SignupScreen = ({navigation}) => {
             {/* Confirm Password */}
             <PassInputBox
               showError={cpassError}
-              placeholder={'Confirm Password'}
-              onChangeText={val => {
+              placeholder={"Confirm Password"}
+              onChangeText={(val) => {
                 setCpass(val);
               }}
               onFocus={() => {
@@ -212,18 +218,18 @@ export const SignupScreen = ({navigation}) => {
               }}
             />
             <SizedBox height={30} />
-            <ActionButton label={'Sign-Up'} onPress={_signup} />
+            <ActionButton label={"Sign-Up"} onPress={_signup} />
             <SizedBox height={20} />
-            <View style={{alignSelf: 'center'}}>
+            <View style={{ alignSelf: "center" }}>
               <TextActionButton
-                label={'Already have an accout? Login'}
+                label={"Already have an accout? Login"}
                 onPress={() => {
                   navigation.pop();
                 }}
               />
             </View>
           </View>
-          {loading && <Loader />}
+          {loading && <Loader label={"Creating Your Account..."} />}
         </SafeAreaView>
       </KeyboardDismiss>
     </KeyboardAvoidingView>
@@ -237,7 +243,7 @@ const styles = StyleSheet.create({
   },
 
   rowItemsStyle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

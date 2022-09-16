@@ -1,10 +1,10 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity } from "react-native";
 import {
   GoogleSignin,
   statusCodes,
-} from '@react-native-google-signin/google-signin';
-
-import {LoginManager} from 'react-native-fbsdk';
+} from "@react-native-google-signin/google-signin";
+import { LoginManager } from "react-native-fbsdk";
+import { Styles } from "../utils/styles";
 
 // * Google
 export const googleSignIn = async () => {
@@ -13,21 +13,18 @@ export const googleSignIn = async () => {
     const userInfo = await GoogleSignin.signIn();
     return userInfo;
   } catch (error) {
+    console.log(error.message);
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       // user cancelled the login flow
-      console.log(error);
       return error;
     } else if (error.code === statusCodes.IN_PROGRESS) {
       // operation (e.g. sign in) is in progress already
-      console.log(error);
       return error;
     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
       // play services not available or outdated
-      console.log(error);
       return error;
     } else {
       // some other error happened
-      console.log(error);
       return error;
     }
   }
@@ -36,8 +33,6 @@ export const googleSignIn = async () => {
 export const googleSignOut = async () => {
   try {
     await GoogleSignin.signOut(); // Remember to remove the user from your app's state as well
-    console.warn('Signed out');
-    // setGdata('Signed out');
   } catch (error) {
     console.error(error);
   }
@@ -52,29 +47,16 @@ export const fbSignout = async () => {
 };
 
 // FB Button Component
-export const FBButton = ({onPress}) => {
+export const FBButton = ({ onPress }) => {
   return (
     <TouchableOpacity
       // onPress={fbLogInCall}
       onPress={() => {
         onPress();
-      }}>
-      <View
-        style={{
-          height: 40,
-          width: 40,
-          backgroundColor: 'blue',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 24,
-            fontWeight: 'bold',
-          }}>
-          f
-        </Text>
+      }}
+    >
+      <View style={Styles.fbIconBG}>
+        <Text style={Styles.fbIconText}>f</Text>
       </View>
     </TouchableOpacity>
   );

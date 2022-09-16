@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import React, { useState } from "react";
+import { View, TextInput } from "react-native";
 
 // Local Imports
-import * as Colors from '../../..//assets/utils/colors';
-import * as Sizes from '../../..//assets/utils/sizes';
-import {Styles} from '../../../assets/utils/styles';
-import {SizedBox} from '../sizedBox';
-import CustomIcons from '../customIcons/CustomIcon';
+import * as Colors from "../../..//assets/utils/colors";
+import * as Sizes from "../../..//assets/utils/sizes";
+import { Styles } from "../../../assets/utils";
+import { SizedBox, CustomIcon, CustomText } from "../index";
 
 export const PassInputBox = ({
   boxContainer = Styles.inputBoxContainer,
@@ -24,12 +23,12 @@ export const PassInputBox = ({
     <>
       {label && (
         <>
-          <Text style={labelStyle}>{label}</Text>
+          <CustomText style={labelStyle}>{label}</CustomText>
           <SizedBox height={Sizes.marginVerySmall} />
         </>
       )}
       <View style={showError ? Styles.inputBoxContainerError : boxContainer}>
-        <CustomIcons name="lock" size={20} style={{color: Colors.lightGray}} />
+        <CustomIcon name="lock" size={20} style={{ color: Colors.lightGray }} />
         <TextInput
           secureTextEntry={secured}
           style={textInput}
@@ -38,10 +37,10 @@ export const PassInputBox = ({
           onChangeText={onChangeText}
           onFocus={onFocus}
         />
-        <CustomIcons
-          name={secured ? 'eyeOpen' : 'eyeClose'}
+        <CustomIcon
+          name={secured ? "eyeOpen" : "eyeClose"}
           size={24}
-          style={{color: Colors.lightGray}}
+          style={{ color: Colors.lightGray }}
           onPress={() => {
             setSecured(!secured);
           }}

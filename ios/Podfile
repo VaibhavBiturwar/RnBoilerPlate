@@ -27,6 +27,7 @@ target 'RnBoilerPlate' do
   )
 
   target 'RnBoilerPlateTests' do
+    use_modular_headers!
     inherit! :complete
     # Pods for testing
      pod 'GoogleSignIn', '~> 6.2.3' #  6.1.0 gives error that version is old | For google signup

@@ -1,9 +1,10 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React from "react";
+import { View, Image } from "react-native";
 
-import {Styles} from '../../assets/utils/styles';
+import { Styles } from "../../assets/utils";
+import { CustomText } from "./index";
 
-export const ListItem = ({item}) => {
+export const ListItem = ({ item }) => {
   return (
     <View style={Styles.listItemContainer}>
       {/* Image */}
@@ -17,11 +18,11 @@ export const ListItem = ({item}) => {
       </View>
       {/* DATA */}
       <View style={Styles.listItem}>
-        <Text>{item.id}</Text>
-        <Text style={Styles.listItemTitle}>
+        <CustomText>{item.id}</CustomText>
+        <CustomText style={Styles.listItemTitle}>
           {item.first_name} {item.last_name}
-        </Text>
-        <Text>{item.email}</Text>
+        </CustomText>
+        <CustomText>{item.email}</CustomText>
       </View>
     </View>
   );

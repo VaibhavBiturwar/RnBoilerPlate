@@ -1,26 +1,29 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, SafeAreaView} from 'react-native';
-import {useDispatch} from 'react-redux';
+import React, { useState } from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
+import { useDispatch } from "react-redux";
 // Local Imports
-import * as Images from '../../../assets/images';
-import * as Sizes from '../../../assets/utils/sizes';
-import * as Strings from '../../../assets/utils/strings';
-import * as HelperFunctions from '../../../assets/utils/helperFunctions';
+import * as Images from "../../../assets/images";
+import * as Sizes from "../../../assets/utils/sizes";
+import * as Strings from "../../../assets/utils/strings";
 
-import {LogoComponent} from '../../components/logoComponent';
-import {PassInputBox} from '../../components/InputBox/passInputBox';
-import {SizedBox} from '../../components/sizedBox';
-import {ActionButton} from '../../components/actionButton/actionButton';
-import {KeyboardDismiss} from '../../components/keyboardDismiss';
-import {HeadingText} from '../../components/headingText';
-import {AlertComponent} from '../../components/alertComponent';
+import {
+  LogoComponent,
+  PassInputBox,
+  SizedBox,
+  ActionButton,
+  KeyboardDismiss,
+  HeadingText,
+  AlertComponent,
+} from "../../components";
 
-import {authenticateUser} from '../../redux/action';
+import { validatePass } from "../../../assets/utils";
 
-export const ChangePassScreen = ({navigation}) => {
-  const [pass, setPass] = useState('');
+import { authenticateUser } from "../../redux/action";
+
+export const ChangePassScreen = ({ navigation }) => {
+  const [pass, setPass] = useState("");
   const [passerror, setPassError] = useState(false);
-  const [cpass, setCpass] = useState('');
+  const [cpass, setCpass] = useState("");
   const [cpasserror, setCpassError] = useState(false);
 
   const dispatch = useDispatch();
@@ -28,35 +31,35 @@ export const ChangePassScreen = ({navigation}) => {
   const _changePassword = () => {
     if (!checkEmptyFields()) return;
     if (pass != cpass) {
-      AlertComponent('Password does not match', 'Please try again');
+      AlertComponent("Password does not match", "Please try again");
       setCpassError(true);
       return;
     }
-    if (!HelperFunctions.validatePass(pass)) {
-      AlertComponent('Password  Invalid', Strings.passInvlid);
+    if (!validatePass(pass)) {
+      AlertComponent("Password  Invalid", Strings.passInvlid);
       setPassError(true);
       return;
     }
     dispatch(
-      authenticateUser(e => {
+      authenticateUser((e) => {
         if (e)
           navigation.reset({
             index: 0,
-            routes: [{name: 'Dashboard'}],
+            routes: [{ name: "Dashboard" }],
           });
-      }),
+      })
     );
   };
 
   const checkEmptyFields = () => {
     if (pass == null || pass.length == 0) {
       setPassError(true);
-      AlertComponent('Please enter your password');
+      AlertComponent("Please enter your password");
       return false;
     }
     if (cpass == null || cpass.length == 0) {
       setCpassError(true);
-      AlertComponent('Please confirm your password');
+      AlertComponent("Please confirm your password");
       return false;
     }
     return true;
@@ -65,21 +68,21 @@ export const ChangePassScreen = ({navigation}) => {
   return (
     <KeyboardDismiss>
       <SafeAreaView style={styles.container}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: "center" }}>
           <LogoComponent
             source={Images.logo}
             height={Sizes.logoBigHeight}
             width={Sizes.logoBigWidth}
-            resizeMode={'contain'}
+            resizeMode={"contain"}
           />
         </View>
-        <View style={{justifyContent: 'center', flex: 1}}>
-          <HeadingText label={'Change Password'} />
+        <View style={{ justifyContent: "center", flex: 1 }}>
+          <HeadingText label={"Change Password"} />
           <SizedBox height={30} />
           <PassInputBox
             showError={passerror}
-            placeholder={'Enter your password'}
-            onChangeText={val => {
+            placeholder={"Enter your password"}
+            onChangeText={(val) => {
               setPass(val);
             }}
             onFocus={() => {
@@ -89,8 +92,8 @@ export const ChangePassScreen = ({navigation}) => {
           <SizedBox height={20} />
           <PassInputBox
             showError={cpasserror}
-            placeholder={'Confirm your password'}
-            onChangeText={val => {
+            placeholder={"Confirm your password"}
+            onChangeText={(val) => {
               setCpass(val);
             }}
             onFocus={() => {
@@ -98,7 +101,7 @@ export const ChangePassScreen = ({navigation}) => {
             }}
           />
           <SizedBox height={30} />
-          <ActionButton label={'Change Password'} onPress={_changePassword} />
+          <ActionButton label={"Change Password"} onPress={_changePassword} />
           <SizedBox height={20} />
         </View>
       </SafeAreaView>

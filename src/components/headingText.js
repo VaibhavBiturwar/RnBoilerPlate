@@ -1,27 +1,26 @@
-import React from 'react';
-import {Text} from 'react-native';
+import React from "react";
 
 // Local Imports
-import * as Colors from '../../assets/utils/colors';
-import * as Sizes from '../../assets/utils/sizes';
-import {Styles} from '../../assets/utils/styles';
+import { Styles } from "../../assets/utils";
+import { CustomText } from "./customText";
 
 export const HeadingText = ({
-  label = 'Heading',
+  label = "Heading",
   color = Styles.headingTextStyle.color,
   fontSize = Styles.headingTextStyle.fontSize,
   fontWeight = Styles.headingTextStyle.fontWeight,
   alignSelf = Styles.headingTextStyle.alignSelf,
 }) => {
   return (
-    <Text
+    <CustomText
       style={{
         color: color,
         alignSelf: alignSelf,
         fontSize: fontSize,
         fontWeight: fontWeight,
-      }}>
+      }}
+    >
       {label}
-    </Text>
+    </CustomText>
   );
 };
